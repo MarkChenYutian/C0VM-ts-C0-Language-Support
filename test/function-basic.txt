@@ -1,0 +1,64 @@
+# Function Base Case
+
+int main() 
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Line(
+                Expression( Keyword(return), Value(Number) )
+            )
+        )
+    )
+)
+
+# Function with Formal Argument
+
+int something(int a)
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Line(
+                Expression( Keyword(return), Value(Number))
+            )
+        )
+    )
+)
+
+# Function with Multiple Formal Arguments
+
+int something_else(int* a, int[] b)
+{
+    return 122;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier),
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)

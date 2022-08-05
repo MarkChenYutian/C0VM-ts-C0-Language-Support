@@ -1,0 +1,26 @@
+# Declare a Variable
+
+int main() {
+    int a = 0;
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Line(
+                Expression(
+                    DeclareVar(Type, Identifier, Value(Number))
+                )
+            ),
+            Line(
+                Expression(
+                    Keyword(return), Value(Number)
+                )
+            )
+        )
+    )
+)

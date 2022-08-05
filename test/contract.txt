@@ -1,0 +1,126 @@
+# Single-line @requires
+
+int main()
+//@requires true;
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Contract(
+            Keyword(requires), Value(Boolean)
+        ),
+        Scope(
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)
+
+# Multi-line @requires
+
+int main()
+/*@requires true;@*/
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Contract(
+            Keyword(requires), Value(Boolean)
+        ),
+        Scope(
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)
+
+# Multiple @requires
+
+int main()
+//@requires true;
+//@requires false;
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Contract(
+            Keyword(requires), Value(Boolean)
+        ),
+        Contract(
+            Keyword(requires), Value(Boolean)
+        ),
+        Scope(
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)
+
+# @ensures contract
+
+int main()
+//@requires true;
+//@ensures true;
+{
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Contract(
+            Keyword(requires), Value(Boolean)
+        ),
+        Contract(
+            Keyword(ensures), Value(Boolean)
+        ),
+        Scope(
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)
+
+# @assert contract in loop body
+
+int main() {
+    //@assert true;
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Line(
+                Contract(Keyword(assert), Value(Boolean))
+            ),
+            Line(
+                Expression(Keyword(return), Value(Number))
+            )
+        )
+    )
+)
