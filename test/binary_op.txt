@@ -1,0 +1,81 @@
+# Add
+
+int main(int argc, char[] argv) {
+    return 1 + 2;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier),
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Expression(
+                Keyword(return), RightValue(
+                    RightValue(Number), 
+                    "+",
+                    RightValue(Number)
+                )
+            )
+        )
+    )
+)
+
+# Minus
+
+int main(int a) {
+    return a - 1;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Expression(
+                Keyword(return), RightValue(
+                    LeftValue(Identifier),
+                    "-",
+                    RightValue(Number)
+                )
+            )
+        )
+    )
+)
+
+# Multiplication and Precedence
+
+int main(int a, int b) {
+    return a + 2 * b;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier),
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Expression(
+                Keyword(return), 
+                RightValue(
+                    RightValue(
+                        LeftValue(Identifier),
+                        "+",
+                        RightValue(Number)
+                    ),
+                    "*",
+                    LeftValue(Identifier)
+                )
+            )
+        )
+    )
+)

@@ -12,12 +12,10 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Contract(
-            Keyword(requires), Value(Boolean)
+            ContractLine, Keyword(requires), RightValue(Boolean)
         ),
         Scope(
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )
@@ -36,12 +34,10 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Contract(
-            Keyword(requires), Value(Boolean)
+            ContractBlock, Keyword(requires), RightValue(Boolean), ContractBlock
         ),
         Scope(
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )
@@ -61,15 +57,13 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Contract(
-            Keyword(requires), Value(Boolean)
+            ContractLine, Keyword(requires), RightValue(Boolean)
         ),
         Contract(
-            Keyword(requires), Value(Boolean)
+            ContractLine, Keyword(requires), RightValue(Boolean)
         ),
         Scope(
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )
@@ -89,15 +83,13 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Contract(
-            Keyword(requires), Value(Boolean)
+            ContractLine, Keyword(requires), RightValue(Boolean)
         ),
         Contract(
-            Keyword(ensures), Value(Boolean)
+            ContractLine, Keyword(ensures), RightValue(Boolean)
         ),
         Scope(
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )
@@ -115,12 +107,10 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Scope(
-            Line(
-                Contract(Keyword(assert), Value(Boolean))
+            Expression(
+                Contract(ContractLine, Keyword(assert), RightValue(Boolean))
             ),
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )

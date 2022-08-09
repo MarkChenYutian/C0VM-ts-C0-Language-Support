@@ -1,0 +1,231 @@
+# if...
+
+int main() {
+    if (true) {
+        return 0;
+    }
+    return 1;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(Boolean), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(
+                Keyword(return), RightValue(Number)
+            )
+        )
+    )
+)
+
+# if...else...
+
+int main() {
+    if (true) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(Boolean), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(
+                Keyword(else), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            )
+        )
+    )
+)
+
+# if...else if...else...
+
+int main() {
+    if (a) {
+        return 0;
+    } else if (b) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), LeftValue(Identifier), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(
+                Keyword(else), Keyword(if), LeftValue(Identifier), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(
+                Keyword(else), Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            )
+        )
+    )
+)
+
+
+# conditions
+
+int main() {
+    if (func()) {
+        return 0;
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(Identifier, CommaSep())
+                ,
+                Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+        )
+    )
+)
+
+# logical and &&
+
+int main() {
+    if (a && b) {
+        return 0;
+    }
+    return 1;
+}
+
+==> 
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(
+                    LeftValue(Identifier), "&&", LeftValue(Identifier)
+                ),
+                Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(Keyword(return), RightValue(Number))
+        )
+    )
+)
+
+# logical or ||
+
+int main() {
+    if (a || b) {
+        return 0;
+    }
+    return 1;
+}
+
+==> 
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(
+                    LeftValue(Identifier), "||", LeftValue(Identifier)
+                ),
+                Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(Keyword(return), RightValue(Number))
+        )
+    )
+)
+
+# Not equal !=
+
+int main() {
+    if (some_cond_func(a) != 0) {
+        return 0;
+    }
+    return 1;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue(
+                    RightValue(Identifier, CommaSep(LeftValue(Identifier))),
+                    "!=",
+                    RightValue(Number)
+                ),
+                Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(Keyword(return), RightValue(Number))
+        )
+    )
+)
+
+# Logical Not
+
+int main() {
+    if (!var) {
+        return 0;
+    }
+    return 1;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), RightValue("!", LeftValue(Identifier)),
+                Scope(
+                    Expression(Keyword(return), RightValue(Number))
+                )
+            ),
+            Expression(Keyword(return), RightValue(Number))
+        )
+    )
+)

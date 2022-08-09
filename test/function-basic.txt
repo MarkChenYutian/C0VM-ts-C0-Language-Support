@@ -11,9 +11,7 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Scope(
-            Line(
-                Expression( Keyword(return), Value(Number) )
-            )
+            Expression( Keyword(return), RightValue(Number) )
         )
     )
 )
@@ -33,9 +31,7 @@ Program(
             Parameter(Type, Identifier)
         ),
         Scope(
-            Line(
-                Expression( Keyword(return), Value(Number))
-            )
+            Expression( Keyword(return), RightValue(Number))
         )
     )
 )
@@ -56,9 +52,7 @@ Program(
             Parameter(Type, Identifier)
         ),
         Scope(
-            Line(
-                Expression(Keyword(return), Value(Number))
-            )
+            Expression(Keyword(return), RightValue(Number))
         )
     )
 )

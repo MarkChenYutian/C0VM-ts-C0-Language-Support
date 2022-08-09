@@ -11,15 +11,128 @@ Program(
     Function(
         Type, Identifier, CommaSep(),
         Scope(
-            Line(
-                Expression(
-                    DeclareVar(Type, Identifier, Value(Number))
+            Expression(
+                DeclareType(Identifier), LeftValue(Identifier), RightValue(Number)
+            ),
+            Expression(
+                Keyword(return), RightValue(Number)
+            )
+        )
+    )
+)
+
+# Function Call as Value
+
+int main() {
+    int a = f();
+    return 0;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                DeclareType(Identifier), LeftValue(Identifier), RightValue(
+                    Identifier, CommaSep()
                 )
             ),
-            Line(
-                Expression(
-                    Keyword(return), Value(Number)
+            Expression(
+                Keyword(return), RightValue(Number)
+            )
+        )
+    )
+)
+
+# Array Indexing of value
+
+int main() {
+    int a = f();
+    return a[0];
+}
+
+==> 
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                DeclareType(Identifier), LeftValue(Identifier), RightValue(Identifier, CommaSep())
+            ),
+            Expression(
+                Keyword(return), LeftValue(LeftValue(Identifier), ArrayIndex(RightValue(Number)))
+            )
+        )
+    )
+)
+
+# Dereference
+
+int main() {
+    int a = *b;
+    return a;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                DeclareType(Identifier), LeftValue(Identifier), LeftValue("*", LeftValue(Identifier))
+            ),
+            Expression(
+                Keyword(return), LeftValue(Identifier)
+            )
+        )
+    )
+)
+
+# Get Struct Field
+
+int main(struct list a) {
+    int b = a -> c;
+    return b;
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(
+            Parameter(Type, Identifier)
+        ),
+        Scope(
+            Expression(
+                DeclareType(Identifier), LeftValue(Identifier), LeftValue(
+                    LeftValue(Identifier), "->", Identifier
                 )
+            ),
+            Expression(
+                Keyword(return), LeftValue(Identifier)
+            )
+        )
+    )
+)
+
+# String 
+
+int main() {
+    return "abs";
+}
+
+==>
+
+Program(
+    Function(
+        Type, Identifier, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(return), RightValue(String)
             )
         )
     )
