@@ -11,15 +11,15 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(Boolean), Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                Keyword(if), Value(Boolean), Scope(
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
             Expression(
-                Keyword(return), RightValue(Number)
+                Keyword(return), Value(Number)
             )
         )
     )
@@ -39,16 +39,14 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(Boolean), Scope(
-                    Expression(Keyword(return), RightValue(Number))
-                )
-            ),
-            Expression(
+                Keyword(if), Value(Boolean), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
                 Keyword(else), Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             )
         )
@@ -71,21 +69,19 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), LeftValue(Identifier), Scope(
-                    Expression(Keyword(return), RightValue(Number))
-                )
-            ),
-            Expression(
-                Keyword(else), Keyword(if), LeftValue(Identifier), Scope(
-                    Expression(Keyword(return), RightValue(Number))
-                )
-            ),
-            Expression(
+                Keyword(if), Variable(Identifier), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
+            
+                Keyword(else), Keyword(if), Variable(Identifier), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
+
                 Keyword(else), Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             )
         )
@@ -105,13 +101,13 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(Identifier, CommaSep())
+                Keyword(if), Value(Variable(Identifier), CommaSep())
                 ,
                 Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
         )
@@ -131,17 +127,17 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(
-                    LeftValue(Identifier), "&&", LeftValue(Identifier)
+                Keyword(if), Value(
+                    Variable(Identifier), "&&", Variable(Identifier)
                 ),
                 Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
-            Expression(Keyword(return), RightValue(Number))
+            Expression(Keyword(return), Value(Number))
         )
     )
 )
@@ -159,17 +155,17 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(
-                    LeftValue(Identifier), "||", LeftValue(Identifier)
+                Keyword(if), Value(
+                    Variable(Identifier), "||", Variable(Identifier)
                 ),
                 Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
-            Expression(Keyword(return), RightValue(Number))
+            Expression(Keyword(return), Value(Number))
         )
     )
 )
@@ -187,19 +183,19 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue(
-                    RightValue(Identifier, CommaSep(LeftValue(Identifier))),
+                Keyword(if), Value(
+                    Value(Variable(Identifier), CommaSep(Variable(Identifier))),
                     "!=",
-                    RightValue(Number)
+                    Value(Number)
                 ),
                 Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
-            Expression(Keyword(return), RightValue(Number))
+            Expression(Keyword(return), Value(Number))
         )
     )
 )
@@ -217,15 +213,15 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), RightValue("!", LeftValue(Identifier)),
+                Keyword(if), Value("!", Variable(Identifier)),
                 Scope(
-                    Expression(Keyword(return), RightValue(Number))
+                    Expression(Keyword(return), Value(Number))
                 )
             ),
-            Expression(Keyword(return), RightValue(Number))
+            Expression(Keyword(return), Value(Number))
         )
     )
 )

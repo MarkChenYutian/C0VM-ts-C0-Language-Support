@@ -1,139 +1,107 @@
-@top Program { 
-    (Function | FuncDeclaration)*
+@top Program {
+  (Function | FuncDeclaration)*
 }
 
-@skip { space | Comment | CommentBlock }
+@skip {space | Comment | CommentBlock}
 
-@precedence { 
-    prec    @left,
-
-    bitnot      @left,
-    bitand      @left,
-    bitor       @left,
-    bitlsh      @left,
-    bitrsh      @left,
-
-    lognot      @left,
-    logand      @left,
-    logor       @left,
-    logeq       @left,
-    logneq      @left,
-    logge       @left,
-    logle       @left,
-    loggt       @left,
-    loglt       @left,
-
-    mul         @left,
-    muleq       @left,
-    div         @left,
-    diveq       @left,
-    mod         @left,
-    modeq       @left,
-    add         @left,
-    addeq       @left,
-    iadd        @left,
-    minus       @left,
-    minuseq     @left,
-    iminus      @left,
-    deref       @left,
-    arridx      @left
+@precedence {
+  type      @right, deref     @right,
+  lognot    @right, bitnot    @right, iadd      @right, imin      @right,
+  mul       @left,  div       @left,  mod       @left,
+  add       @left,  min       @left, 
+  lsh       @left,  rsh       @left, 
+  lt        @left,  le        @left,  gt        @left, ge        @left,
+  ieq       @left,  neq       @left, 
+  bitand    @left,  bitxor    @left,  bitor     @left,
+  logand    @left,  logor     @left,  condval   @right,
+  addeq     @right, mineq     @right, muleq     @right, diveq     @right, modeq     @right, andeq     @right, xoreq     @right, noteq     @right, lsheq     @right, rsheq     @right
 }
-
-// LibraryImport {
-//     "#use" "<" ModuleName ">"
-// }
 
 FuncDeclaration {
-    Type Identifier "(" CommaSep<Parameter> ")" 
-    (Contract<"requires"> | Contract<"ensures">)*
-    ";"
+  Type FunctionName "(" CommaSep<Parameter> ")"
+  (Contract<"requires"> | Contract<"ensures">)*
+  ";"
 }
 
 Function {
-    Type Identifier "(" CommaSep<Parameter> ")" 
-    (Contract<"requires"> | Contract<"ensures">)*
-    Scope
+  Type FunctionName "(" CommaSep<Parameter> ")" 
+  (Contract<"requires"> | Contract<"ensures">)*
+  Scope
 }
 
 Scope { "{" Expression* "}" }
 
 Expression {
-    ( RightValue ";" )                                   // Direct value (say calling a function)
-    | ( DeclareType Identifier ";")
-    | ( DeclareType? LeftValue "=" (LeftValue | RightValue) ";")
-    | ( DeclareType? LeftValue "=" Keyword<"alloc"> "(" Type ")" ";")
-    | ( DeclareType? LeftValue "=" Keyword<"alloc_array"> "(" Type (LeftValue | RightValue) ")" ";")
-    | ( Keyword<"return"> (LeftValue | RightValue) ";")                // Return 
-    | Contract<"assert">
-    | ( Keyword<"if"> "(" (LeftValue | RightValue) ")" Scope )
-    | ( Keyword<"else"> Keyword<"if"> "(" (LeftValue | RightValue) ")" Scope )
-    | ( Keyword<"else"> Scope )
-    | ( Keyword<"while"> "(" (LeftValue | RightValue) ")" Contract<"loop_invariant">* Scope )
-    | ( Keyword<"for"> 
-        "(" ForInit ";" (LeftValue | RightValue) ";" ((LeftValue "=" (LeftValue | RightValue) | RightValue) ")"
-            Contract<"loop_invariant">*
-            Scope
-        )
-      )
+  (Type? Variable "=" (Value | Variable) ";")
+  | (Type Variable ";")
+
+  | (Variable "+=" (Value | Variable) ";")
+  | (Variable "-=" (Value | Variable) ";")
+  | (Variable "*=" (Value | Variable) ";")
+  | (Variable "/=" (Value | Variable) ";")
+  | (Variable "%=" (Value | Variable) ";")
+  | (Variable "&=" (Value | Variable) ";")
+  | (Variable "^=" (Value | Variable) ";")
+  | (Variable "~=" (Value | Variable) ";")
+  | (Variable "<<=" (Value | Variable) ";")
+  | (Variable ">>=" (Value | Variable) ";")
+
+  | (Keyword<"return"> (Variable | Value) ";")
+  | (Keyword<"if"> "(" (Variable | Value) ")" Scope
+      (Keyword<"else"> Keyword<"if"> "(" (Variable | Value) ")" Scope)*
+      (Keyword<"else"> Scope)?
+    )
 }
 
-ForInit {
-    DeclareType? LeftValue "=" (LeftValue | RightValue)
+Value {
+  String | Number | Boolean | Char | Keyword<"NULL">
+  | (Variable "(" CommaSep<Variable | Value> ")")
+  | (!lognot "!" (Value | Variable))
+  | (!bitnot "~" (Value | Variable))
+  | (!iadd "++"  (Value | Variable))
+  | (!imin "--"  (Value | Variable))
+
+  | ((Value | Variable) !mul "*" (Value | Variable))
+  | ((Value | Variable) !div "/" (Value | Variable))
+  | ((Value | Variable) !mod "%" (Value | Variable))
+
+  | ((Value | Variable) !add "+" (Value | Variable))
+  | ((Value | Variable) !min "-" (Value | Variable))
+
+  | ((Value | Variable) !lsh "<<" (Value | Variable))
+  | ((Value | Variable) !rsh ">>" (Value | Variable))
+
+  | ((Value | Variable) !lt "<" (Value | Variable))
+  | ((Value | Variable) !le "<="(Value | Variable))
+  | ((Value | Variable) !gt ">" (Value | Variable))
+  | ((Value | Variable) !ge ">="(Value | Variable))
+
+  | ((Value | Variable) !ieq "==" (Value | Variable))
+  | ((Value | Variable) !neq "!=" (Value | Variable))
+
+  | ((Value | Variable) !bitand "&" (Value | Variable))
+  | ((Value | Variable) !bitxor "^" (Value | Variable))
+  | ((Value | Variable) !bitor  "|" (Value | Variable))
+  
+  | ((Value | Variable) !logand "&&" (Value | Variable))
+  | ((Value | Variable) !logor  "||" (Value | Variable))
+  | ((Value | Variable) !condval "?" (Value | Variable) ":" (Value | Variable))
 }
 
-LeftValue {
-    // String | Number | Boolean | Char | Keyword<"NULL">  // Literal values
-    (!deref "*" LeftValue)                            // Value can be deref
-    | (LeftValue "->" Identifier)                       // Field offset
-    | (!arridx LeftValue ArrayIndex)                    // Can get array index of value
-    | Identifier
+Variable {
+  !deref "*"* Identifier (ArrayIndex | ("->" Identifier))*
 }
 
-RightValue {
-    String | Number | Boolean | Char | Keyword<"NULL">  // Literal values
-    | (Identifier "(" CommaSep<(LeftValue | RightValue)> ")")           // Function Call/variable
-    | (!prec "(" (LeftValue | RightValue) ")")                             // Prioritize partially
-    | (!mul (LeftValue | RightValue) "*" (LeftValue | RightValue))                            // Multiply
-    | (!div (LeftValue | RightValue) "/" (LeftValue | RightValue))                            // Divide
-    | (!mod (LeftValue | RightValue) "%" (LeftValue | RightValue))                            // Mod
-    | (!add (LeftValue | RightValue) "+" (LeftValue | RightValue))                            // Add
-    | (!minus   (LeftValue | RightValue) "-" (LeftValue | RightValue))                        // Minus
-    | (!iadd    (LeftValue | RightValue) "++")
-    | (!iminus  (LeftValue | RightValue) "--")
-    | (!addeq   (LeftValue | RightValue) "+=" (LeftValue | RightValue))
-    | (!minuseq (LeftValue | RightValue) "-=" (LeftValue | RightValue))
-    | (!muleq   (LeftValue | RightValue) "*=" (LeftValue | RightValue))
-    | (!diveq   (LeftValue | RightValue) "/=" (LeftValue | RightValue))
-    | (!modeq   (LeftValue | RightValue) "%=" (LeftValue | RightValue))
-    // bitwise operator
-    | (!bitnot "~" (LeftValue | RightValue))
-    | (!bitand  (LeftValue | RightValue) "&"  (LeftValue | RightValue))
-    | (!bitor   (LeftValue | RightValue) "|"  (LeftValue | RightValue))
-    | (!bitlsh  (LeftValue | RightValue) "<<" (LeftValue | RightValue))
-    | (!bitrsh  (LeftValue | RightValue) ">>" (LeftValue | RightValue))
-    // logical operator
-    | (!lognot "!" (LeftValue | RightValue))
-    | (!logand  (LeftValue | RightValue) "&&"  (LeftValue | RightValue))
-    | (!logor   (LeftValue | RightValue) "||"  (LeftValue | RightValue))
-    | (!logeq   (LeftValue | RightValue) "=="  (LeftValue | RightValue))
-    | (!logneq  (LeftValue | RightValue) "!="  (LeftValue | RightValue))
-    | (!logle   (LeftValue | RightValue) "<="  (LeftValue | RightValue))
-    | (!logge   (LeftValue | RightValue) ">="  (LeftValue | RightValue))
-    | (!loglt   (LeftValue | RightValue) "<"   (LeftValue | RightValue))
-    | (!loggt   (LeftValue | RightValue) ">"   (LeftValue | RightValue))
-}
-
-DeclareType { Keyword<"struct">? Identifier  (!arridx"[" | !arridx"]" | !deref "*")* }
+/* Base Definitions */
+Type { !type Keyword<"struct">? Identifier ("[" | "]" | "*")* }
 Parameter { Type Identifier }
-
-ArrayIndex { "[" (LeftValue | RightValue) "]" }
-
-Boolean { @specialize<Identifier, "true" | "false"> }
+ArrayIndex { "[" (Variable | Value) "]"}
+Boolean { @specialize<Identifier, "true"> | @specialize<Identifier, "false"> }
 
 /* Template Rules */
 Contract<type> {
-    (ContractLine Keyword<type> (LeftValue | RightValue) ";")
-    | (ContractBlock Keyword<type> (LeftValue | RightValue) ";" ContractBlock)
+  (ContractLine Keyword<type> (Variable | Value) ";")
+  | (ContractBlock Keyword<type> (Variable | Value) ";" ContractBlock)
 }
 CommaSep<Content> { "" | Content ("," Content)* }               // Comma seperated values
 Keyword<word> { @specialize[@name={word}]<Identifier, word> }   // Keyword
@@ -141,35 +109,23 @@ Keyword<word> { @specialize[@name={word}]<Identifier, word> }   // Keyword
 
 /* Tokens */
 @tokens {
-    Type { "struct "? $[a-zA-Z_]$[a-zA-Z_0-9]*$[\*\[\]]* }
     Identifier { $[a-zA-Z_]$[a-zA-Z_0-9]* }
-    // ModuleName { $[a-zA-Z_]$[a-zA-Z_0-9]* }
+    FunctionName { $[a-zA-Z_]$[a-zA-Z_0-9]* }
 
     String { "\"" ![\0]* "\""}
     Number {
              "0" | ($[1-9] $[0-9]*) |           // Normal 10-base number
              (("0x"|"0X") $[0-9a-fA-F]+)        // Hex number
            }
-    Char   { "'" $[\\]? ![\0] "'"}
+    Char { "'" $[\\]? ![\0] "'"}
 
-    Comment      { "//" ![@] ![\n]* }
+    Comment { "//" ![@] ![\n]* }
     CommentBlock { "/*" ![@] ![\0]* "*/"}
 
-    ContractLine  {"//@"}
+    ContractLine {"//@"}
     ContractBlock {"/*@" | "@*/"}
 
-    // SpecialVar  { "\\length" | "\\return" }
-
-    @precedence { ContractLine, Comment, "/" }         // Contract override comment even both match
-    @precedence { ContractBlock, CommentBlock }         // Contract block overrides Comment block
-    @precedence { "->", "-" }
-    @precedence { "++", "+" }
-    @precedence { "--", "-" }
-    @precedence { "+=", "+" }
-    @precedence { "-=", "-" }
-    @precedence { "*=", "*" }
-    @precedence { "/=", "/" }
-    @precedence { "%=", "%" }
+    @precedence { ContractLine, ContractBlock, Comment, CommentBlock, "/" }
 
     space { $[ \t\n\r]+ }
 

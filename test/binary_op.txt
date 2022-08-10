@@ -8,16 +8,14 @@ int main(int argc, char[] argv) {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier),
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Identifier), Identifier),
+            Parameter(Type(Identifier), Identifier)
         ),
         Scope(
             Expression(
-                Keyword(return), RightValue(
-                    RightValue(Number), 
-                    "+",
-                    RightValue(Number)
+                Keyword(return), Value(
+                    Value(Number), "+", Value(Number)
                 )
             )
         )
@@ -34,15 +32,13 @@ int main(int a) {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Identifier), Identifier)
         ),
         Scope(
             Expression(
-                Keyword(return), RightValue(
-                    LeftValue(Identifier),
-                    "-",
-                    RightValue(Number)
+                Keyword(return), Value(
+                    Variable(Identifier), "-", Value(Number)
                 )
             )
         )
@@ -59,21 +55,16 @@ int main(int a, int b) {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier),
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Identifier), Identifier),
+            Parameter(Type(Identifier), Identifier)
         ),
         Scope(
             Expression(
-                Keyword(return), 
-                RightValue(
-                    RightValue(
-                        LeftValue(Identifier),
-                        "+",
-                        RightValue(Number)
-                    ),
-                    "*",
-                    LeftValue(Identifier)
+                Keyword(return), Value(
+                    Variable(Identifier), "+", Value(
+                        Value(Number), "*", Variable(Identifier)
+                    )
                 )
             )
         )

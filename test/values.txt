@@ -9,13 +9,13 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                DeclareType(Identifier), LeftValue(Identifier), RightValue(Number)
+                Type(Identifier), Variable(Identifier), Value(Number)
             ),
             Expression(
-                Keyword(return), RightValue(Number)
+                Keyword(return), Value(Number)
             )
         )
     )
@@ -32,15 +32,15 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                DeclareType(Identifier), LeftValue(Identifier), RightValue(
-                    Identifier, CommaSep()
+                Type(Identifier), Variable(Identifier), Value(
+                    Variable(Identifier), CommaSep()
                 )
             ),
             Expression(
-                Keyword(return), RightValue(Number)
+                Keyword(return), Value(Number)
             )
         )
     )
@@ -57,13 +57,13 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                DeclareType(Identifier), LeftValue(Identifier), RightValue(Identifier, CommaSep())
+                Type(Identifier), Variable(Identifier), Value(Variable(Identifier), CommaSep())
             ),
             Expression(
-                Keyword(return), LeftValue(LeftValue(Identifier), ArrayIndex(RightValue(Number)))
+                Keyword(return), Variable(Identifier, ArrayIndex(Value(Number)))
             )
         )
     )
@@ -80,13 +80,13 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                DeclareType(Identifier), LeftValue(Identifier), LeftValue("*", LeftValue(Identifier))
+                Type(Identifier), Variable(Identifier), Variable("*", Identifier)
             ),
             Expression(
-                Keyword(return), LeftValue(Identifier)
+                Keyword(return), Variable(Identifier)
             )
         )
     )
@@ -103,17 +103,17 @@ int main(struct list a) {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Keyword(struct), Identifier), Identifier)
         ),
         Scope(
             Expression(
-                DeclareType(Identifier), LeftValue(Identifier), LeftValue(
-                    LeftValue(Identifier), "->", Identifier
+                Type(Identifier), Variable(Identifier), Variable(
+                    Identifier, "->", Identifier
                 )
             ),
             Expression(
-                Keyword(return), LeftValue(Identifier)
+                Keyword(return), Variable(Identifier)
             )
         )
     )
@@ -129,10 +129,10 @@ int main() {
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(return), RightValue(String)
+                Keyword(return), Value(String)
             )
         )
     )

@@ -9,9 +9,9 @@ int main()
 
 Program(
     Function(
-        Type, Identifier, CommaSep(),
+        Type(Identifier), FunctionName, CommaSep(),
         Scope(
-            Expression( Keyword(return), RightValue(Number) )
+            Expression( Keyword(return), Value(Number) )
         )
     )
 )
@@ -27,11 +27,11 @@ int something(int a)
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Identifier), Identifier)
         ),
         Scope(
-            Expression( Keyword(return), RightValue(Number))
+            Expression( Keyword(return), Value(Number))
         )
     )
 )
@@ -47,12 +47,12 @@ int something_else(int* a, int[] b)
 
 Program(
     Function(
-        Type, Identifier, CommaSep(
-            Parameter(Type, Identifier),
-            Parameter(Type, Identifier)
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(Type(Identifier), Identifier),
+            Parameter(Type(Identifier), Identifier)
         ),
         Scope(
-            Expression(Keyword(return), RightValue(Number))
+            Expression(Keyword(return), Value(Number))
         )
     )
 )

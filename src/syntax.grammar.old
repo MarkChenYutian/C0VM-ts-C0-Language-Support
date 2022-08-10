@@ -1,0 +1,188 @@
+@top Program { 
+    (Function | FuncDeclaration)*
+}
+
+@skip { space | Comment | CommentBlock }
+
+@precedence { 
+    prec    @left,
+
+    bitnot      @left,
+    bitand      @left,
+    bitor       @left,
+    bitlsh      @left,
+    bitrsh      @left,
+
+    lognot      @left,
+    logand      @left,
+    logor       @left,
+    logeq       @left,
+    logneq      @left,
+    logge       @left,
+    logle       @left,
+    loggt       @left,
+    loglt       @left,
+
+    mul         @left,
+    muleq       @left,
+    div         @left,
+    diveq       @left,
+    mod         @left,
+    modeq       @left,
+    add         @left,
+    addeq       @left,
+    iadd        @left,
+    minus       @left,
+    minuseq     @left,
+    iminus      @left,
+    deref       @left,
+    arridx      @left
+}
+
+// LibraryImport {
+//     "#use" "<" ModuleName ">"
+// }
+
+FuncDeclaration {
+    Type Identifier "(" CommaSep<Parameter> ")" 
+    (Contract<"requires"> | Contract<"ensures">)*
+    ";"
+}
+
+Function {
+    Type Identifier "(" CommaSep<Parameter> ")" 
+    (Contract<"requires"> | Contract<"ensures">)*
+    Scope
+}
+
+Scope { "{" Expression* "}" }
+
+Expression {
+    ( RightValue ";" )                                   // Direct value (say calling a function)
+    | ( DeclareType Identifier ";")
+    | ( DeclareType? LeftValue "=" (LeftValue | RightValue) ";")
+    | ( DeclareType? LeftValue "=" Keyword<"alloc"> "(" Type ")" ";")
+    | ( DeclareType? LeftValue "=" Keyword<"alloc_array"> "(" Type (LeftValue | RightValue) ")" ";")
+    | ( Keyword<"return"> (LeftValue | RightValue) ";")                // Return 
+    | Contract<"assert">
+    | ( Keyword<"if"> "(" (LeftValue | RightValue) ")" Scope )
+    | ( Keyword<"else"> Keyword<"if"> "(" (LeftValue | RightValue) ")" Scope )
+    | ( Keyword<"else"> Scope )
+    | ( Keyword<"while"> "(" (LeftValue | RightValue) ")" Contract<"loop_invariant">* Scope )
+    | ( Keyword<"for"> 
+        "(" ForInit ";" (LeftValue | RightValue) ";" ((LeftValue "=" (LeftValue | RightValue) | RightValue) ")"
+            Contract<"loop_invariant">*
+            Scope
+        )
+      )
+}
+
+ForInit {
+    DeclareType? LeftValue "=" (LeftValue | RightValue)
+}
+
+LeftValue {
+    // String | Number | Boolean | Char | Keyword<"NULL">  // Literal values
+    (!deref "*" LeftValue)                            // Value can be deref
+    | (LeftValue "->" Identifier)                       // Field offset
+    | (!arridx LeftValue ArrayIndex)                    // Can get array index of value
+    | Identifier
+}
+
+RightValue {
+    String | Number | Boolean | Char | Keyword<"NULL">  // Literal values
+    | (Identifier "(" CommaSep<(LeftValue | RightValue)> ")")           // Function Call/variable
+    | (!prec "(" (LeftValue | RightValue) ")")                             // Prioritize partially
+    | (!mul (LeftValue | RightValue) "*" (LeftValue | RightValue))                            // Multiply
+    | (!div (LeftValue | RightValue) "/" (LeftValue | RightValue))                            // Divide
+    | (!mod (LeftValue | RightValue) "%" (LeftValue | RightValue))                            // Mod
+    | (!add (LeftValue | RightValue) "+" (LeftValue | RightValue))                            // Add
+    | (!minus   (LeftValue | RightValue) "-" (LeftValue | RightValue))                        // Minus
+    | (!iadd    (LeftValue | RightValue) "++")
+    | (!iminus  (LeftValue | RightValue) "--")
+    | (!addeq   (LeftValue | RightValue) "+=" (LeftValue | RightValue))
+    | (!minuseq (LeftValue | RightValue) "-=" (LeftValue | RightValue))
+    | (!muleq   (LeftValue | RightValue) "*=" (LeftValue | RightValue))
+    | (!diveq   (LeftValue | RightValue) "/=" (LeftValue | RightValue))
+    | (!modeq   (LeftValue | RightValue) "%=" (LeftValue | RightValue))
+    // bitwise operator
+    | (!bitnot "~" (LeftValue | RightValue))
+    | (!bitand  (LeftValue | RightValue) "&"  (LeftValue | RightValue))
+    | (!bitor   (LeftValue | RightValue) "|"  (LeftValue | RightValue))
+    | (!bitlsh  (LeftValue | RightValue) "<<" (LeftValue | RightValue))
+    | (!bitrsh  (LeftValue | RightValue) ">>" (LeftValue | RightValue))
+    // logical operator
+    | (!lognot "!" (LeftValue | RightValue))
+    | (!logand  (LeftValue | RightValue) "&&"  (LeftValue | RightValue))
+    | (!logor   (LeftValue | RightValue) "||"  (LeftValue | RightValue))
+    | (!logeq   (LeftValue | RightValue) "=="  (LeftValue | RightValue))
+    | (!logneq  (LeftValue | RightValue) "!="  (LeftValue | RightValue))
+    | (!logle   (LeftValue | RightValue) "<="  (LeftValue | RightValue))
+    | (!logge   (LeftValue | RightValue) ">="  (LeftValue | RightValue))
+    | (!loglt   (LeftValue | RightValue) "<"   (LeftValue | RightValue))
+    | (!loggt   (LeftValue | RightValue) ">"   (LeftValue | RightValue))
+}
+
+DeclareType { Keyword<"struct">? Identifier  (!arridx"[" | !arridx"]" | !deref "*")* }
+Parameter { Type Identifier }
+
+ArrayIndex { "[" (LeftValue | RightValue) "]" }
+
+Boolean { @specialize<Identifier, "true" | "false"> }
+
+/* Template Rules */
+Contract<type> {
+    (ContractLine Keyword<type> (LeftValue | RightValue) ";")
+    | (ContractBlock Keyword<type> (LeftValue | RightValue) ";" ContractBlock)
+}
+CommaSep<Content> { "" | Content ("," Content)* }               // Comma seperated values
+Keyword<word> { @specialize[@name={word}]<Identifier, word> }   // Keyword
+
+
+/* Tokens */
+@tokens {
+    Type { "struct "? $[a-zA-Z_]$[a-zA-Z_0-9]*$[\*\[\]]* }
+    Identifier { $[a-zA-Z_]$[a-zA-Z_0-9]* }
+    // ModuleName { $[a-zA-Z_]$[a-zA-Z_0-9]* }
+
+    String { "\"" ![\0]* "\""}
+    Number {
+             "0" | ($[1-9] $[0-9]*) |           // Normal 10-base number
+             (("0x"|"0X") $[0-9a-fA-F]+)        // Hex number
+           }
+    Char   { "'" $[\\]? ![\0] "'"}
+
+    Comment      { "//" ![@] ![\n]* }
+    CommentBlock { "/*" ![@] ![\0]* "*/"}
+
+    ContractLine  {"//@"}
+    ContractBlock {"/*@" | "@*/"}
+
+    // SpecialVar  { "\\length" | "\\return" }
+
+    @precedence { ContractLine, Comment, "/" }         // Contract override comment even both match
+    @precedence { ContractBlock, CommentBlock }         // Contract block overrides Comment block
+    @precedence { "->", "-" }
+    @precedence { "++", "+" }
+    @precedence { "--", "-" }
+    @precedence { "+=", "+" }
+    @precedence { "-=", "-" }
+    @precedence { "*=", "*" }
+    @precedence { "/=", "/" }
+    @precedence { "%=", "%" }
+
+    space { $[ \t\n\r]+ }
+
+    ","
+    "+=" "-=" "*=" "/=" "%="
+    "++" "--"
+    "*" "+" "-" "/" "%"
+    "~" "^" "|" "<<" ">>"
+    "&&" "||" "==" "!=" "<=" ">=" "<" ">" "!"
+    "->"
+    "="
+    "[" "]"
+    "(" ")"
+    "{" "}"
+    ";"
+}
