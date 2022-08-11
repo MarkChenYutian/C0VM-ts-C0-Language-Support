@@ -48,7 +48,7 @@ int something_else(int* a, int[] b)
 Program(
     Function(
         Type(Identifier), FunctionName, CommaSep(
-            Parameter(Type(Identifier), Identifier),
+            Parameter(Type(Identifier, Mul), Identifier),
             Parameter(Type(Identifier), Identifier)
         ),
         Scope(

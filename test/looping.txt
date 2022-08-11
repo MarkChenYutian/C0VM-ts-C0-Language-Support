@@ -1,0 +1,72 @@
+# Simple For Loop
+
+int main() {
+    printf("something");
+    for(int i = 0; i < 100; i++)
+    {
+        printf("something else");
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type(Identifier), FunctionName, CommaSep(),
+        Scope(
+            Expression(Value(
+                Variable(Identifier), CommaSep(Value(String))
+            )),
+            Expression(
+                Keyword(for),
+                    Expression(Type(Identifier), Variable(Identifier), Value(Number)),
+                    Value(Variable(Identifier), Lt, Value(Number)),
+                    Expression(Variable(Identifier), Incr),
+                Scope(
+                    Expression(Value(
+                        Variable(Identifier), CommaSep(
+                            Value(String)
+                        )
+                    ))
+                )
+            )
+        )
+    )
+)
+
+# Complex For Loop
+
+int f(struct T* head) {
+    for (struct T* ptr = head; ptr != NULL; ptr = ptr -> next) {
+        printf("something");    // Comment
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type(Identifier), FunctionName, CommaSep(
+            Parameter(
+                Type(Keyword(struct), Identifier, Mul),
+                Identifier
+            )
+        ),
+        Scope(
+            Expression(
+                Keyword(for),
+                    Expression(Type(Keyword(struct), Identifier), Variable(Mul, Identifier), Variable(Identifier)),
+                    Value(Variable(Identifier), LogNeq, Value(Keyword(NULL))),
+                    Expression(Variable(Identifier) "=" Variable(Identifier, Field, Identifier)),
+                Scope(
+                    Expression(Value(
+                        Variable(Identifier), CommaSep(
+                            Value(String)
+                        )
+                    )),
+                    Comment
+                )
+            )
+        )
+    )
+)

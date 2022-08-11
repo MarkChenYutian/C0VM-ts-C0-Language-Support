@@ -88,6 +88,47 @@ Program(
     )
 )
 
+# multiple else if branch
+
+int main() {
+    if (a) {
+        return 0;
+    } else if (b) {
+        return 1;
+    } else if (c) {
+        return 2;
+    } else {
+        return 3;
+    }
+}
+
+==>
+
+Program(
+    Function(
+        Type(Identifier), FunctionName, CommaSep(),
+        Scope(
+            Expression(
+                Keyword(if), Variable(Identifier), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
+            
+                Keyword(else), Keyword(if), Variable(Identifier), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
+
+                Keyword(else), Keyword(if), Variable(Identifier), Scope(
+                    Expression(Keyword(return), Value(Number))
+                ),
+
+                Keyword(else), Scope(
+                    Expression(Keyword(return), Value(Number))
+                )
+            )
+        )
+    )
+)
+
 
 # conditions
 
@@ -131,7 +172,7 @@ Program(
         Scope(
             Expression(
                 Keyword(if), Value(
-                    Variable(Identifier), "&&", Variable(Identifier)
+                    Variable(Identifier), LogAnd, Variable(Identifier)
                 ),
                 Scope(
                     Expression(Keyword(return), Value(Number))
@@ -159,7 +200,7 @@ Program(
         Scope(
             Expression(
                 Keyword(if), Value(
-                    Variable(Identifier), "||", Variable(Identifier)
+                    Variable(Identifier), LogOr, Variable(Identifier)
                 ),
                 Scope(
                     Expression(Keyword(return), Value(Number))
@@ -188,7 +229,7 @@ Program(
             Expression(
                 Keyword(if), Value(
                     Value(Variable(Identifier), CommaSep(Variable(Identifier))),
-                    "!=",
+                    LogNeq,
                     Value(Number)
                 ),
                 Scope(
@@ -216,7 +257,7 @@ Program(
         Type(Identifier), FunctionName, CommaSep(),
         Scope(
             Expression(
-                Keyword(if), Value("!", Variable(Identifier)),
+                Keyword(if), Value(LogNot, Variable(Identifier)),
                 Scope(
                     Expression(Keyword(return), Value(Number))
                 )

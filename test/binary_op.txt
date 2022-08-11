@@ -15,7 +15,7 @@ Program(
         Scope(
             Expression(
                 Keyword(return), Value(
-                    Value(Number), "+", Value(Number)
+                    Value(Number), Add, Value(Number)
                 )
             )
         )
@@ -38,7 +38,7 @@ Program(
         Scope(
             Expression(
                 Keyword(return), Value(
-                    Variable(Identifier), "-", Value(Number)
+                    Variable(Identifier), Min, Value(Number)
                 )
             )
         )
@@ -62,8 +62,8 @@ Program(
         Scope(
             Expression(
                 Keyword(return), Value(
-                    Variable(Identifier), "+", Value(
-                        Value(Number), "*", Variable(Identifier)
+                    Variable(Identifier), Add, Value(
+                        Value(Number), Mul, Variable(Identifier)
                     )
                 )
             )
