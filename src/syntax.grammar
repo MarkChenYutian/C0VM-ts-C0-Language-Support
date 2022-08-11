@@ -88,6 +88,10 @@ Expression {
 Value {
   String | Number | Boolean | Char | Keyword<"NULL">
   | (Variable "(" CommaSep<(Variable | Value)> ")")
+  
+  | (Keyword<"alloc"> "(" Type ")")
+  | (Keyword<"alloc_array"> "(" Type "," Value ")")
+
   | (!lognot LogNot (Value | Variable))
   | (!bitnot BitNot (Value | Variable))
 
@@ -203,3 +207,6 @@ Keyword<word> { @specialize[@name={word}]<Identifier, word> }   // Keyword
     "{" "}"
     ";"
 }
+
+@detectDelim
+

@@ -14,9 +14,7 @@ export const C0Language = LRLanguage.define({
         StructScope: context => context.baseIndent + context.unit
       }),
       styleTags({
-        Type: t.typeName,
-        "struct": t.typeName,
-        Identifier: t.constant(t.typeName),
+        "Type/...": t.typeName,
         FunctionName: t.attributeName,
 
         Boolean: t.bool,
@@ -33,17 +31,17 @@ export const C0Language = LRLanguage.define({
         "while": t.controlKeyword,
         "for": t.controlKeyword,
 
-        LibraryImport: t.moduleKeyword,
-        Import: t.moduleKeyword,
-        LibraryName: t.moduleKeyword,
+        "LibraryImport/...": t.moduleKeyword,
 
+        "alloc": t.keyword,
+        "alloc_array": t.keyword,
         "assert": t.keyword,
         "typedef": t.keyword,
         "loop_invariant": t.keyword,
         "requires": t.keyword,
         "ensures": t.keyword,
 
-        "NULL": t.number,
+        "NULL": t.null,
 
         ContractBlock: t.blockComment,
         ContractLine: t.lineComment,
