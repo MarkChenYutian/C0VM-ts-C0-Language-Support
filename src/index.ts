@@ -15,7 +15,9 @@ export const C0Language = LRLanguage.define({
       }),
       styleTags({
         "Type/...": t.typeName,
-        FunctionName: t.attributeName,
+        "StructScope/Identifier": t.attributeName,
+        "FunctionName/...": t.name,
+        "Parameter/Identifier": t.variableName,
 
         Boolean: t.bool,
         String: t.string,
@@ -43,8 +45,8 @@ export const C0Language = LRLanguage.define({
 
         "NULL": t.null,
 
-        ContractBlock: t.blockComment,
-        ContractLine: t.lineComment,
+        ContractBlock: t.annotation,
+        ContractLine: t.annotation,
 
         "(": t.paren,
         ")": t.paren,

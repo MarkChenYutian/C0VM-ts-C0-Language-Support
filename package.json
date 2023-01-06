@@ -1,5 +1,5 @@
 {
-  "name": "@codemirror/lang-C0",
+  "name": "@codemirror/lang-c0",
   "version": "0.1.0",
   "description": "C0 language support for CodeMirror",
   "scripts": {
